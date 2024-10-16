@@ -21,8 +21,40 @@ router.post('/', (req, res) => {
     res.status(201).json(newProduct);
 });
 
-/**
- * Were missing some routes here...
- */
+// GET /products - Get one product
+router.get('/:id', (req, res, next) => {
+    try {
+        const product = products.find(p => p.id === req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        res.json(product);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// PUT /products - Update product
+router.put('/:id', (req, res, next) => {
+    try {
+        const index = products.findIndex(p => p.id === req.params.id);
+        if (index === -1) return res.status(404).json({ message: 'Product not found' });
+        const { name, descr, price } = req.body;
+        products[index] = { ...products[index], name, descr, price };
+        res.json(products[index]);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// DELETE /products - Delete product
+router.delete('/:id', (req, res, next) => {
+    try {
+        const index = products.findIndex(p => p.id === req.params.id);
+        if (index === -1) return res.status(404).json({ message: 'Product not found' });
+        const deletedProduct = products.splice(index, 1);
+        res.json({ message: 'Removed product', product: deletedProduct[0] });
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;
