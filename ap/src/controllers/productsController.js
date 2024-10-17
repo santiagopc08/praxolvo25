@@ -1,5 +1,6 @@
 const { productsService } = require('../services');
 const { response } = require('../utils');
+const { ErrorHandler } = require('../utils');
 
 const getProducts= async (req,res)=>{
     const products =  await productsService.getAllProducts();
@@ -33,9 +34,9 @@ const DeleteProduct= async (req,res)=>{
 
 
 module.exports = {
-    getProducts,
-    getProductById,
-    CreateProduct,
-    UpdateProduct,
-    DeleteProduct
+    getProducts: ErrorHandler(getProducts),
+    getProductById: ErrorHandler(getProductById),
+    CreateProduct: ErrorHandler(CreateProduct),
+    UpdateProduct: ErrorHandler(UpdateProduct),
+    DeleteProduct: ErrorHandler(DeleteProduct)
 }

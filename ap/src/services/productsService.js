@@ -1,4 +1,4 @@
-
+const { ClientError } = require("../utils/error");
 let products = [];
 products.push({
     id: 1,
@@ -23,32 +23,42 @@ products.push({
 });
 
 const getAllProducts = async () => {
+    if(products.length === 0){
+        throw new ClientError('No products found', 404);
+    }
     return products;
 }
 const getProductById = async (id) => {
     const product= products.find(product => product.id === id);
     if(!product){
-        throw new Error('Id invalid', 400);
+        throw new ClientError('Id invalid', 400);
     }
     return product;
 }
 
 const createProduct = async (name, descr, price) => {
+    if (!name || !descr || price === undefined || price <= 0) {
+        throw new ClientError('Invalid product data', 400);
+    }
     const newProduct = {
         id: products.length + 1,
         name,
         descr,
         price,
         creationDate: new Date()
-    };
+    }
     products.push(newProduct);
     return newProduct;
+
 }
 
 const updateProduct = async (id, name, descr, price) => {
     const product = products.find(product => product.id === id);
-    if(!product){
-        throw new Error('Id invalid', 400);
+    if (!product) {
+        throw new ClientError(`Product with ID ${id} not found`, 404);
+    }
+    if (!name || !descr || price === undefined || price <= 0) {
+        throw new ClientError('Invalid product data for update', 400);
     }
     product.name = name;
     product.descr = descr;
@@ -58,8 +68,8 @@ const updateProduct = async (id, name, descr, price) => {
 
 const deleteProduct = async (id) => {
     const product = products.find(product => product.id === id);
-    if(!product){
-        throw new Error('Id invalid', 400);
+    if (!product) {
+        throw new ClientError(`Product with ID ${id} not found`, 404);
     }
     products = products.filter(product => product.id !== id);
     return product;
