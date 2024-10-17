@@ -1,42 +1,6 @@
 const express = require("express");
+const products = require("../mock/products");
 const router = express.Router();
-const products = [
-  {
-    id: 1,
-    name: "ball",
-    descr: "small sphere used in sports games",
-    price: 15000,
-    creationDate: "10/16/2024",
-  },
-  {
-    id: 2,
-    name: "frisbee",
-    descr: "flying disc used for recreational activities",
-    price: 15000,
-    creationDate: "10/16/2024",
-  },
-  {
-    id: 3,
-    name: "bicycle",
-    descr: "two-wheeled vehicle for transportation",
-    price: 350000,
-    creationDate: "10/16/2024",
-  },
-  {
-    id: 4,
-    name: "racket",
-    descr: "tool for playing tennis",
-    price: 80000,
-    creationDate: "10/16/2024",
-  },
-  {
-    id: 5,
-    name: "roller skates",
-    descr: "footwear with wheels for gliding",
-    price: 120000,
-    creationDate: "10/16/2024",
-  },
-];
 
 // GET /products - Get all products
 router.get("/", (req, res) => {
@@ -49,7 +13,9 @@ router.get("/", (req, res) => {
 // GET /products - Get products by id
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  const foundProductById = products.find((product) => product.id === parseInt(id));
+  const foundProductById = products.find(
+    (product) => product.id === parseInt(id)
+  );
   //create a validation for id does't exist
   if (!foundProductById) {
     return res.status(404).send("Product not found");
@@ -89,7 +55,9 @@ router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { name, descr, price } = req.body;
   const product = products.find((product) => product.id === parseInt(id));
-  const productIndex = products.findIndex((product) => product.id === parseInt(id));
+  const productIndex = products.findIndex(
+    (product) => product.id === parseInt(id)
+  );
   products[productIndex] = {
     id,
     name,
@@ -103,7 +71,7 @@ router.put("/:id", (req, res) => {
     return res.status(404).send("Product not found");
   }
   //create a validation for required fields
-  if (!name &&!descr &&!price) {
+  if (!name && !descr && !price) {
     return res.status(400).send("No fields to update");
   }
   // create a validation for price different to a number
@@ -125,7 +93,7 @@ router.delete("/:id", (req, res) => {
   //create a validation for the id don't exist
   if (products.length === newProductList.length) {
     return res.status(404).send("Product not found");
-  } 
+  }
   res.status(200).json(newProductList);
 });
 
